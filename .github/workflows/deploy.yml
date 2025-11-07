@@ -21,11 +21,9 @@ jobs:
         
     - name: Prepare files
       run: |
-        mkdir -p dist
-        mkdir -p dist/v${{ env.VERSION }}
-        cp -r *.html ru/ en/ dist/
+        mkdir -p dist/v${{ env.VERSION }}        
         cp -r *.html ru/ en/ dist/v${{ env.VERSION }}/
-        
+        touch dist/v${{ env.VERSION }}/.nojekyll
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
