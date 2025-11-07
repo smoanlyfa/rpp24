@@ -13,26 +13,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ref: main
       
     - name: Get version
       run: |
         VERSION=${GITHUB_REF#refs/tags/v}
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         
-    - name: Prepare files
+    - name: Create version directory
       run: |
-        mkdir -p dist
-        mkdir -p dist/v${{ env.VERSION }}
-        cp -r *.html ru/ en/ dist/
-        cp -r *.html ru/ en/ dist/v${{ env.VERSION }}/
-        touch dist/.nojekyll
-        touch dist/v${{ env.VERSION }}/.nojekyll
+        mkdir -p v${{ env.VERSION }}
+        touch .nojekyll
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./
         keep_files: true
