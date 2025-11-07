@@ -19,15 +19,15 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/v}
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         
-    - name: Prepare version directory
+    - name: Prepare files
       run: |
-        mkdir -p v${{ env.VERSION }}
-        cp -r *.html ru/ en/ v${{ env.VERSION }}/
-        touch v${{ env.VERSION }}/.nojekyll
+        mkdir -p dist/v${{ env.VERSION }}        
+        cp -r *.html ru/ en/ dist/v${{ env.VERSION }}/
+        touch dist/v${{ env.VERSION }}/.nojekyll
         
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
+      uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./v${{ env.VERSION }}
+        publish_dir: ./dist
         keep_files: true
