@@ -3,7 +3,6 @@ name: Deploy to GitHub Pages
 on:
   release:
     types: [published]
-    branches: [gh-pages]
   workflow_dispatch:
 
 jobs:
@@ -15,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        ref: gh-pages
+        ref: main
       
     - name: Get version
       run: |
@@ -28,6 +27,8 @@ jobs:
         mkdir -p dist/v${{ env.VERSION }}
         cp -r *.html ru/ en/ dist/
         cp -r *.html ru/ en/ dist/v${{ env.VERSION }}/
+        touch dist/.nojekyll
+        touch dist/v${{ env.VERSION }}/.nojekyll
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
