@@ -1,0 +1,37 @@
+name: Deploy to GitHub Pages
+
+on:
+  release:
+    types: [published]
+    branches: [gh-pages]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+      
+    - name: Get version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        
+    - name: Prepare files
+      run: |
+        mkdir -p dist
+        mkdir -p dist/v${{ env.VERSION }}
+        cp -r *.html ru/ en/ dist/
+        cp -r *.html ru/ en/ dist/v${{ env.VERSION }}/
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+        keep_files: true
